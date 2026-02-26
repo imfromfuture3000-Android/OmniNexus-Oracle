@@ -1,4 +1,5 @@
 import { Connection, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { storage } from "./storage";
 
 // Agent Configuration using stored credentials
 const CONFIG = {
@@ -143,11 +144,25 @@ class RalphAgentBot {
     ];
   }
 
-  private log(level: AgentLog["level"], message: string, data?: Record<string, unknown>) {
+  private async log(level: AgentLog["level"], message: string, data?: Record<string, unknown>) {
     const entry: AgentLog = { timestamp: Date.now(), level, message, data };
     this.state.logs.unshift(entry);
     if (this.state.logs.length > 100) this.state.logs.pop();
     console.log(`[RALPH-${level.toUpperCase()}] ${message}`, data || "");
+
+    // Persist to DB
+    try {
+      await storage.createRalphLog({
+        level,
+        message,
+        details: data || {},
+        strategyId: data?.strategyId as string,
+        profit: data?.profit?.toString(),
+        txHash: data?.txHash as string,
+      });
+    } catch (e) {
+      console.error("Failed to persist RALPH log:", e);
+    }
   }
 
   async start(): Promise<{ success: boolean; message: string }> {
@@ -289,6 +304,20 @@ class RalphAgentBot {
     const successfulCycles = this.state.strategies.reduce((acc, s) => acc + (s.successRate * s.totalExecutions / 100), 0);
     const totalExecutions = this.state.strategies.reduce((acc, s) => acc + s.totalExecutions, 0);
     this.state.metrics.successRate = totalExecutions > 0 ? (successfulCycles / totalExecutions) * 100 : 0;
+
+    // Persist metrics to DB every 5 cycles
+    if (this.state.cycleCount % 5 === 0) {
+      try {
+        await storage.createRalphMetric({
+          uptime: this.state.metrics.uptime.toString(),
+          totalEarnings: this.state.totalEarnings.toString(),
+          successRate: this.state.metrics.successRate.toString(),
+          avgCycleTime: this.state.metrics.avgCycleTime.toString(),
+        });
+      } catch (e) {
+        console.error("Failed to persist RALPH metrics:", e);
+      }
+    }
   }
 
   private async executeSignalSeek(strategy: AgentStrategy): Promise<CycleResult> {

@@ -1,9 +1,11 @@
 import { 
-  alien_signals, emotional_nfts, relayer_transactions, empires,
+  alien_signals, emotional_nfts, relayer_transactions, empires, ralph_logs, ralph_metrics,
   type InsertAlienSignal, type AlienSignal,
   type InsertEmotionalNft, type EmotionalNft,
   type InsertRelayerTx, type RelayerTransaction,
-  type InsertEmpire, type Empire
+  type InsertEmpire, type Empire,
+  type InsertRalphLog, type RalphLog,
+  type InsertRalphMetric, type RalphMetric
 } from "./schema";
 import { db } from "./db";
 import { desc, eq } from "drizzle-orm";
@@ -19,6 +21,10 @@ export interface IStorage {
   getEmpires(): Promise<Empire[]>;
   getEmpireById(empireId: string): Promise<Empire | undefined>;
   updateEmpire(empireId: string, update: Partial<InsertEmpire>): Promise<Empire | undefined>;
+  createRalphLog(log: InsertRalphLog): Promise<RalphLog>;
+  getRalphLogs(limit?: number): Promise<RalphLog[]>;
+  createRalphMetric(metric: InsertRalphMetric): Promise<RalphMetric>;
+  getRalphMetrics(limit?: number): Promise<RalphMetric[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -52,6 +58,38 @@ export class DatabaseStorage implements IStorage {
       .where(eq(empires.empireId, empireId))
       .returning();
     return empire;
+  }
+
+  async createRalphLog(insertLog: InsertRalphLog): Promise<RalphLog> {
+    const [log] = await db
+      .insert(ralph_logs)
+      .values(insertLog as any)
+      .returning();
+    return log;
+  }
+
+  async getRalphLogs(limit = 100): Promise<RalphLog[]> {
+    return await db
+      .select()
+      .from(ralph_logs)
+      .orderBy(desc(ralph_logs.timestamp))
+      .limit(limit);
+  }
+
+  async createRalphMetric(insertMetric: InsertRalphMetric): Promise<RalphMetric> {
+    const [metric] = await db
+      .insert(ralph_metrics)
+      .values(insertMetric as any)
+      .returning();
+    return metric;
+  }
+
+  async getRalphMetrics(limit = 50): Promise<RalphMetric[]> {
+    return await db
+      .select()
+      .from(ralph_metrics)
+      .orderBy(desc(ralph_metrics.timestamp))
+      .limit(limit);
   }
 
   async createSignal(insertSignal: InsertAlienSignal): Promise<AlienSignal> {

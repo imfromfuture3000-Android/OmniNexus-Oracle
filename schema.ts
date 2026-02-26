@@ -74,6 +74,27 @@ export const empires = pgTable("empires", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const ralph_logs = pgTable("ralph_logs", {
+  id: serial("id").primaryKey(),
+  level: text("level").notNull(),
+  message: text("message").notNull(),
+  strategyId: text("strategy_id"),
+  profit: numeric("profit"),
+  txHash: text("tx_hash"),
+  details: jsonb("details"),
+  timestamp: timestamp("timestamp").defaultNow(),
+});
+
+export const ralph_metrics = pgTable("ralph_metrics", {
+  id: serial("id").primaryKey(),
+  uptime: numeric("uptime").notNull(),
+  cycleCount: serial("cycle_count"),
+  totalEarnings: numeric("total_earnings").notNull(),
+  successRate: numeric("success_rate").notNull(),
+  avgCycleTime: numeric("avg_cycle_time").notNull(),
+  timestamp: timestamp("timestamp").defaultNow(),
+});
+
 export const insertEmpireSchema = z.object({
   empireId: z.string(),
   owner: z.string(),
@@ -99,3 +120,25 @@ export type InsertEmotionalNft = z.infer<typeof insertEmotionalNftSchema>;
 
 export type RelayerTransaction = typeof relayer_transactions.$inferSelect;
 export type InsertRelayerTx = z.infer<typeof insertRelayerTxSchema>;
+
+export type RalphLog = typeof ralph_logs.$inferSelect;
+export type InsertRalphLog = z.infer<typeof insertRalphLogSchema>;
+
+export type RalphMetric = typeof ralph_metrics.$inferSelect;
+export type InsertRalphMetric = z.infer<typeof insertRalphMetricSchema>;
+
+export const insertRalphLogSchema = z.object({
+  level: z.string(),
+  message: z.string(),
+  strategyId: z.string().optional(),
+  profit: z.string().optional(),
+  txHash: z.string().optional(),
+  details: z.record(z.string(), z.unknown()).optional(),
+});
+
+export const insertRalphMetricSchema = z.object({
+  uptime: z.string(),
+  totalEarnings: z.string(),
+  successRate: z.string(),
+  avgCycleTime: z.string(),
+});
