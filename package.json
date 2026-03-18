@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@biconomy/account": "^4.5.7",
-    "@biconomy/bundler": "^3.1.4",
-    "@biconomy/paymaster": "^3.1.4",
+    "@biconomy/bundler": "^4.1.1",
+    "@biconomy/paymaster": "^4.1.1",
     "@google/genai": "^1.34.0",
     "@solana/wallet-adapter-base": "^0.9.27",
     "@solana/wallet-adapter-react": "^0.15.39",
