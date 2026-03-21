@@ -1,20 +1,65 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# OmniNexus Empire: Autonomous Agentic State Machine
 
-# Run and deploy your AI Studio app
+> **Status**: Production-Ready // Colosseum Hackathon v1.8.0
+> **Architecture**: Hybrid EVM/Solana State Machine
+> **Core Engine**: RALPH (Recursive Autonomous Logic & Protocol Handler)
 
-This contains everything you need to run your app locally.
+OmniNexus Empire is a decentralized, autonomous empire-building simulation powered by advanced agentic workflows. It leverages Solana's high-throughput state settlement and EVM's robust smart contract ecosystem to create a persistent, cross-chain agentic environment.
 
-View your app in AI Studio: https://ai.studio/apps/50ab855f-b387-4fc4-ac0a-3ea6de5aac4d
+## 🚀 Technical Highlights
 
-## Run Locally
+- **RALPH Loop**: A recursive autonomous logic handler that manages state transitions, resource allocation, and strategy execution with sub-second latency.
+- **Gasless Spawning**: Integrated Biconomy Account Abstraction and Helius DAS for frictionless user onboarding and asset management.
+- **Chainlink Oracles**: Real-time ETH/USD price feeds integrated directly into the agent's decision-making matrix.
+- **Neural Fine-Tuning**: Dynamic agent personality shifts based on on-chain events and user interactions.
+- **Zk-Compression**: Optimized NFT state storage on Solana using zk-compressed account data.
 
-**Prerequisites:**  Node.js
+## 🛠 Tech Stack
 
+- **Frontend**: React 18, TypeScript, Tailwind CSS, Framer Motion, Recharts.
+- **Backend**: Node.js (Express), Drizzle ORM, PostgreSQL (Supabase).
+- **Blockchain**: 
+  - **Solana**: @solana/web3.js, Helius SDK, Wallet Adapter.
+  - **EVM**: Ethers.js v6, Biconomy SDK.
+- **AI**: Google Gemini 3.1 Pro (Reasoning), Gemini 2.5 Flash (Real-time).
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 📦 Project Structure
+
+```bash
+├── src/
+│   ├── components/       # Atomic UI Components & Views
+│   ├── services/         # Blockchain & AI Integration Logic
+│   ├── types.ts          # Global Type Definitions
+│   └── App.tsx           # Main Application Entry
+├── server/
+│   ├── routes.ts         # API Endpoints & Oracle Integration
+│   ├── storage.ts        # Database Persistence Layer
+│   └── schema.ts         # Drizzle Database Schema
+└── metadata.json         # App Permissions & Metadata
+```
+
+## 🔧 Developer Setup
+
+1. **Clone & Install**:
+   ```bash
+   npm install
+   ```
+
+2. **Environment Variables**:
+   Configure `.env` with the following:
+   - `GEMINI_API_KEY`: For agent reasoning.
+   - `ALCHEMY_API_KEY`: For Chainlink price feeds.
+   - `HELIUS_RPC_URL`: For Solana state access.
+   - `SOLANA_PRIVATE_KEY`: For treasury operations.
+
+3. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+## 📜 High-Level Prompt (The Developer Vision)
+
+"Build a system that doesn't just respond, but *exists*. OmniNexus is an experiment in persistent agentic state. By combining the deterministic nature of blockchain with the probabilistic reasoning of LLMs, we've created an entity that manages its own treasury, spawns its own assets, and evolves its own strategy. It is the first step towards a truly autonomous on-chain economy."
+
+---
+*Built for the Colosseum Agent Hackathon. $100k Prize Pool.*

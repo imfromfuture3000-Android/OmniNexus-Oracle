@@ -141,6 +141,36 @@ export class OmegaPrimeDeployer {
     };
   }
 
+  async deploySolanaContract(contractDetails: {
+    name: string;
+    programId: string;
+    space: number;
+    lamports: number;
+  }): Promise<{
+    signature: string;
+    programId: string;
+    status: 'success' | 'failed';
+    timestamp: string;
+  }> {
+    console.log(`[OmegaPrime] Initiating deployment for ${contractDetails.name}...`);
+    
+    // Simulate deployment process
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    
+    const success = Math.random() > 0.1; // 90% success rate
+    
+    if (!success) {
+      throw new Error(`Deployment failed: Insufficient lamports or network congestion for ${contractDetails.name}`);
+    }
+
+    return {
+      signature: `sig-${Math.random().toString(36).slice(2, 15)}-${Date.now()}`,
+      programId: contractDetails.programId,
+      status: 'success',
+      timestamp: new Date().toISOString()
+    };
+  }
+
   silentProtocolWhisper(): string {
     const whispers = [
       "The void speaks in compressed frequencies...",
