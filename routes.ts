@@ -67,6 +67,23 @@ const AGGREGATOR_ABI = [
 ];
 const CHAINLINK_ETH_USD = '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419';
 
+// Security: Authentication Middleware for Protected Endpoints
+function requireAuth(req: any, res: any, next: any) {
+  const authHeader = req.headers.authorization;
+  const apiKey = process.env.RALPH_API_KEY || 'default-secure-key';
+  
+  if (!authHeader) {
+    return res.status(401).json({ error: 'Authorization header missing' });
+  }
+  
+  const token = authHeader.replace('Bearer ', '');
+  if (token !== apiKey) {
+    return res.status(403).json({ error: 'Unauthorized: Invalid credentials' });
+  }
+  
+  next();
+}
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
@@ -194,7 +211,8 @@ export async function registerRoutes(
     res.json(empires);
   });
 
-  app.get("/api/empire/wallets", (req, res) => {
+  // SECURITY FIX: Protect wallet endpoints with authentication
+  app.get("/api/empire/wallets", requireAuth, (req, res) => {
     res.json(empireSpawner.getWallets());
   });
 
@@ -301,7 +319,8 @@ export async function registerRoutes(
     }
   });
 
-  app.post("/api/agent/start", async (req, res) => {
+  // SECURITY FIX: Protect agent control endpoints with authentication
+  app.post("/api/agent/start", requireAuth, async (req, res) => {
     try {
       const result = await ralphAgent.start();
       res.json(result);
@@ -310,7 +329,7 @@ export async function registerRoutes(
     }
   });
 
-  app.post("/api/agent/stop", async (req, res) => {
+  app.post("/api/agent/stop", requireAuth, async (req, res) => {
     try {
       const result = await ralphAgent.stop();
       res.json(result);
@@ -319,7 +338,7 @@ export async function registerRoutes(
     }
   });
 
-  app.post("/api/agent/strategy/:id", async (req, res) => {
+  app.post("/api/agent/strategy/:id", requireAuth, async (req, res) => {
     try {
       const { id } = req.params;
       const { enabled } = req.body;
