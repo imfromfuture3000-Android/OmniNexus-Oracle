@@ -43,7 +43,12 @@ hide = true
 
 [lint]
 description = "Run repository lint checks"
-depends = ["license:check", "rust:format:check", "rust:lint", "python:format:check", "python:lint", "helm:lint"]
+depends = ["license:check", "rust:format:check", "rust:lint", "python:format:check", "python:lint", "helm:lint", "secrets:scan"]
+hide = true
+
+["secrets:scan"]
+description = "Scan staged files for high-risk keys/tokens before commit/push"
+run = "bash ../scripts/scan-secrets.sh"
 hide = true
 
 [ci]
