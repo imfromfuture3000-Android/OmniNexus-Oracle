@@ -10,7 +10,11 @@
     "lint": "tsc --noEmit",
     "agent:start": "curl -s -X POST http://localhost:3000/api/agent/start && echo",
     "agent:status": "curl -s http://localhost:3000/api/agent/status && echo",
-    "mission:init": "cat MissionManifest.json && echo && curl -s -X POST http://localhost:3000/api/agent/start && echo"
+    "mission:init": "cat MissionManifest.json && echo && curl -s -X POST http://localhost:3000/api/agent/start && echo",
+    "nexus:status": "curl -s http://localhost:3000/api/nexus/status | jq && echo",
+    "nexus:authorize": "curl -s -X POST http://localhost:3000/api/nexus/authorize -H 'Content-Type: application/json' -d '{\"manifestPath\": \"MissionManifest.json\"}' | jq && echo",
+    "nexus:ideate": "curl -s -X POST http://localhost:3000/api/nexus/ideate -H 'Content-Type: application/json' -d '{\"theme\": \"solana-defi-infinity-protocol\"}' | jq && echo",
+    "nexus:deploy": "curl -s -X POST http://localhost:3000/api/nexus/deploy -H 'Content-Type: application/json' | jq && echo"
   },
   "dependencies": {
     "@biconomy/account": "^4.5.7",

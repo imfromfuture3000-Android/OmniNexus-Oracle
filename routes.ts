@@ -7,6 +7,7 @@ import { omegaPrime } from "./omega-prime";
 import { zeroCostRelayer } from "./zero-cost-relayer";
 import { ralphAgent } from "./ralph-agent";
 import { empireSpawner } from "./empire-spawner";
+import { nexusPrime } from "./nexus-prime";
 import { ethers } from "ethers";
 import axios from "axios";
 import { insertAlienSignalSchema, alien_signals } from './schema';
@@ -339,6 +340,95 @@ export async function registerRoutes(
       res.json(result);
     } catch (err) {
       res.status(500).json({ error: "Failed to switch network" });
+    }
+  });
+
+  // ============================================================
+  // NEXUS PRIME v5.0 - Genesis Engine Routes
+  // ============================================================
+
+  app.post("/api/nexus/authorize", async (req, res) => {
+    try {
+      const { manifestPath } = req.body;
+      const authorized = nexusPrime.authorizeMission(manifestPath || "MissionManifest.json");
+      res.json({
+        success: authorized,
+        message: authorized
+          ? "✅ MissionManifest AUTHORIZED. All personas now have execution authority."
+          : "❌ Authorization failed. Check manifest validity.",
+      });
+    } catch (err) {
+      res.status(500).json({ error: "Authorization checkpoint failed" });
+    }
+  });
+
+  app.post("/api/nexus/ideate", async (req, res) => {
+    try {
+      const { theme } = req.body;
+      if (!theme) {
+        return res.status(400).json({ error: "Theme required (e.g., 'solana-gamefi', 'privacy-stablecoin')" });
+      }
+      const result = await nexusPrime.ideate(theme);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json({ error: `Oracle-7 ideation failed: ${String(err)}` });
+    }
+  });
+
+  app.post("/api/nexus/architect", async (req, res) => {
+    try {
+      const { strategy } = req.body;
+      if (!strategy) {
+        return res.status(400).json({ error: "Strategy required as input to Architect-TS" });
+      }
+      const result = await nexusPrime.architect(strategy);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json({ error: `Architect-TS design failed: ${String(err)}` });
+    }
+  });
+
+  app.post("/api/nexus/deploy", async (req, res) => {
+    try {
+      const result = await nexusPrime.deploy();
+      res.json(result);
+    } catch (err) {
+      res.status(500).json({ error: `Fabricator-CLI deployment failed: ${String(err)}` });
+    }
+  });
+
+  app.post("/api/nexus/evolve", async (req, res) => {
+    try {
+      const result = await nexusPrime.evolve();
+      res.json(result);
+    } catch (err) {
+      res.status(500).json({ error: `Warden-AI evolution failed: ${String(err)}` });
+    }
+  });
+
+  app.get("/api/nexus/status", async (req, res) => {
+    try {
+      const status = nexusPrime.getStatus();
+      res.json(status);
+    } catch (err) {
+      res.status(500).json({ error: "Failed to get Nexus Prime status" });
+    }
+  });
+
+  app.post("/api/nexus/runloop", async (req, res) => {
+    try {
+      const { theme } = req.body;
+      if (!theme) {
+        return res.status(400).json({ error: "Theme required to start full Nexus Prime loop" });
+      }
+      res.json({
+        message: "✅ Full loop starting. Monitor progess via WebSocket or /api/nexus/status",
+        hint: "1. Call POST /api/nexus/ideate with theme\n2. Call POST /api/nexus/architect with strategy\n3. Call POST /api/nexus/authorize to approve deployment\n4. Call POST /api/nexus/deploy to execute\n5. Call POST /api/nexus/evolve to learn",
+      });
+      // Run async without waiting
+      nexusPrime.runFullLoop(theme).catch(e => console.error("Nexus Prime loop error:", e));
+    } catch (err) {
+      res.status(500).json({ error: "Nexus Prime loop failed" });
     }
   });
 
