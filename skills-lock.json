@@ -5,6 +5,16 @@
       "source": "ColosseumOrg/colosseum-copilot",
       "sourceType": "github",
       "computedHash": "7859139478a5276c63a6114f0c3f9899ca4a30b5e4239825d16b92e8744e9e07"
+    },
+    "dotenv": {
+      "source": "dotenv",
+      "sourceType": "node_modules",
+      "computedHash": "e64c5ecfb1239ab1d3b344bd44d67957c15535779acddb3311f5ed1108ca92fb"
+    },
+    "dotenvx": {
+      "source": "dotenv",
+      "sourceType": "node_modules",
+      "computedHash": "49dad51b8b8363e9ea0497e6ec71fef6a2afef58f3b219ccccc81ab7f79df3c4"
     }
   }
 }

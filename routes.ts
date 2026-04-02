@@ -2,7 +2,7 @@ import type { Express } from "express";
 import type { Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
-import { getBalance, getTreasuryBalance, getNetworkStatus, getRecentTransactions, TREASURY_WALLET, HELIUS_URL } from "./solana";
+import { getBalance, getTreasuryBalance, getNetworkStatus, getRecentTransactions, getAllPrograms, getProgramsWithoutOwner, TREASURY_WALLET, HELIUS_URL } from "./solana";
 import { omegaPrime } from "./omega-prime";
 import { zeroCostRelayer } from "./zero-cost-relayer";
 import { ralphAgent } from "./ralph-agent";
@@ -180,6 +180,24 @@ export async function registerRoutes(
       });
     } catch (err) {
       res.status(500).json({ error: "Failed to get blockchain stats" });
+    }
+  });
+
+  app.get("/api/solana/programs", async (req, res) => {
+    try {
+      const programs = await getAllPrograms();
+      res.json({ programs, count: programs.length });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to get programs" });
+    }
+  });
+
+  app.get("/api/solana/programs/without-owner", async (req, res) => {
+    try {
+      const programs = await getProgramsWithoutOwner();
+      res.json({ programs, count: programs.length });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to get programs without owner" });
     }
   });
 
